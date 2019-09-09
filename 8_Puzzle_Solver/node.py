@@ -9,4 +9,13 @@ class Node:
         self.pred = pred
         self.open_size = open_size
         self.closed_size = closed_size
+        self.g = g
 
+    def set_pred(self, new_pred):
+        self.pred = new_pred
+
+    def set_open_size(self, new_size):
+        self.open_size = new_size
+
+    def set_closed_size(self, new_size):
+        self.closed_size = new_size
