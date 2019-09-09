@@ -2,19 +2,19 @@
 # CSCE405 Artificial Intelligence
 # Programming Assignment #1
 
-import node.py
+# import node.py
 
-class search:
-    def __init__(self, start, goal, closed, open, search):
-        test = 0
+class Search:
+    def __init__(self, search, start, goal, closed, o_list):
+        self.search_type = search  # This string denotes which search method will be used to solve the puzzle
+        self.search_start = start  # This list the starting state of the puzzle
+        self.search_goal = goal  # This list the solution to the puzzle
+        self.closed_list = closed  # This is a list that holds the nodes that have been expanded
+        self.open_list = o_list  # This is a list that holds the nodes that need to be expanded
 
 
 """ VARIABLES:
-    search_start  # This holds the starting state of the puzzle
-    search_goal  # This holds the solution to the puzzle
-    closed_list  # This is a list that holds the nodes that have been expanded
-    open_list  # This is a list that holds the nodes that need to be expanded
-    search_type  # This denotes which search method will be used to solve the puzzle
+
      
      METHODS
      check_parody  # This method will determine the parody of the puzzle to determine is it is solveable
