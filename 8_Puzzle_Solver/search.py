@@ -6,17 +6,17 @@ from node import Node
 
 
 class Search:
-    def __init__(self, search=None, start=None, goal=None, closed=None, o_list=None):
+    def __init__(self, search=None, start=None, goal=None, closed_list=None, open_list=None):
         self.search_type = search  # This string denotes which search method will be used to solve the puzzle
         self.search_start = start  # This list the starting state of the puzzle
         self.search_goal = goal  # This list the solution to the puzzle
-        self.closed_list = closed  # This is a list that holds the nodes that have been expanded
-        self.open_list = o_list  # This is a list that holds the nodes that need to be expanded
+        self.closed_list = closed_list  # This is a list that holds the nodes that have been expanded
+        self.open_list = open_list  # This is a list that holds the nodes that need to be expanded
 
     # This method will determine the parody of the puzzle to determine is it is solvable
-    def check_parody(self):
-        p_s = 0  # Parody of the start
-        p_g = 0  # Parody of the goal
+    def check_parity(self):
+        p_s = 0  # parity of the start
+        p_g = 0  # parity of the goal
 
         #  First for-loop determines the parody function of the start of the puzzle.
         for x in range(0, len(self.search_start)):
@@ -28,7 +28,7 @@ class Search:
                         if x_int > y_int:
                             p_s = p_s + 1
 
-        #  Second for-loop determines the parody function of the goal of the puzzle.
+        #  Second for-loop determines the parity function of the goal of the puzzle.
         for x in range(0, len(self.search_goal)):
             if x + 1 != self.search_goal[x]:  # Determines if x is out of numeric order
                 for y in range(x + 1, len(self.search_goal)):
@@ -38,17 +38,17 @@ class Search:
                         if x_int > y_int:
                             p_g = p_g + 1
 
-        print("Start Parody: ", p_s, "\nGoal Parody: ", p_g)
+        print("Start Parity: ", p_s, "\nGoal Parity: ", p_g)
         if (p_s % 2) == (p_g % 2):
             if p_s % 2 == 0:
-                print("Parody is equal and even.")
+                print("Parity is equal and even.")
             else:
-                print("Parody is equal and odd.")
+                print("Parity is equal and odd.")
         else:
-            print("Parody is not equal.")
+            print("Parity is not equal.")
 
     # This method creates a node for each viable move & adds the node to the open_list
-    def generate_options(self, curr_node):
+    def expand(self, curr_node):
 
         blank_pos = curr_node.val.index('X')
         options = []
