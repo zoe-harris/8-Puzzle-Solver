@@ -15,45 +15,37 @@ class Search:
 
     # This method will determine the parody of the puzzle to determine is it is solvable
     def check_parody(self):
-        print("Hey, some parodies are better than the original. Some are too close. Personal opinion, really.")
-        """ 
-        x = current pos
-        y = looping pos
-        p_s = parody counter for start
-        p_g = parody counter for goal
-        Steps:
-            1. if x < y, do nothing
-            2. if x > y, p++ 
-            3. Repeat until all checked
-            3a. Only need to check everything located after x
-        """
-        p_s, p_g = 0
+        p_s = 0  # Parody of the start
+        p_g = 0  # Parody of the goal
+
+        #  First for-loop determines the parody function of the start of the puzzle.
         for x in range(0, len(self.search_start)):
-            for y in range(x + 1, len(self.search_start)):
-                if self.search_start[x] == 'X' or self.search_start[y] == 'X':
-                    print("Skip somehow")
-                elif self.search_start[x] > self.search_start[y]:
-                    p_s = p_s + 1
+            if x + 1 != self.search_start[x]:  # Determines if x is out of numeric order
+                for y in range(x + 1, len(self.search_start)):
+                    if (self.search_start[x] != "X") and (self.search_start[y] != "X"):
+                        x_int = int(self.search_start[x])
+                        y_int = int(self.search_start[y])
+                        if x_int > y_int:
+                            p_s = p_s + 1
 
+        #  Second for-loop determines the parody function of the goal of the puzzle.
         for x in range(0, len(self.search_goal)):
-            for y in range(x + 1, len(self.search_goal)):
-                if self.search_goal[x] == 'X' or self.search_goal[y] == 'X':
-                    print("Skip somehow")
-                elif self.search_goal[x] > self.search_goal[y]:
-                    p_g = p_g + 1
+            if x + 1 != self.search_goal[x]:  # Determines if x is out of numeric order
+                for y in range(x + 1, len(self.search_goal)):
+                    if (self.search_goal[x] != "X") and (self.search_goal[y] != "X"):
+                        x_int = int(self.search_goal[x])
+                        y_int = int(self.search_goal[y])
+                        if x_int > y_int:
+                            p_g = p_g + 1
 
-        print("Start Parody: " + p_s)
-        print("Goal Parody: " + p_g)
-
+        print("Start Parody: ", p_s, "\nGoal Parody: ", p_g)
         if (p_s % 2) == (p_g % 2):
             if p_s % 2 == 0:
                 print("Parody is equal and even.")
             else:
                 print("Parody is equal and odd.")
-
         else:
             print("Parody is not equal.")
-
 
     # This method creates a node for each viable move & adds the node to the open_list
     def generate_options(self, curr_node):
