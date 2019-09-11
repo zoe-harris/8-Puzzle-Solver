@@ -4,7 +4,9 @@
 
 
 class Node:
-    def __init__(self, val=None, pred=None, g=None):
+    def __init__(self, val=None, pred=None, g=None, h=None, f=None):
         self.val = val
         self.pred = pred
         self.g = g
+        self.h = h
+        self.f = f
