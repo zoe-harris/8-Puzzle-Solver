@@ -118,8 +118,21 @@ class Search:
 
     """ This method checks to see if the current node is located in the closed list. If it is, it is removed from the
     open_list. """
-    def check_duplicate(self):
-        print("Duplicates are boring. Be original.")
+    def check_duplicate(self, n):
+
+        duplicate = True
+
+        for x in range(len(self.closed_list)):
+            temp = self.closed_list[x]
+            duplicate = True
+            for i in range(3):
+                for j in range(3):
+                    if n.val[i][j] is not temp.val[i][j]:
+                        duplicate = False
+            if duplicate is True:
+                return duplicate
+
+        return duplicate
 
     """ This method compares the current node to search_goal. """
     def check_solution(self, current):

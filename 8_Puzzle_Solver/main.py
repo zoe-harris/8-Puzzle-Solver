@@ -22,27 +22,25 @@ for x in range(len(start_state)):
         if start_state[x][y] != "X":
             start_state[x][y] = int(start_state[x][y])
 
-print("START")
-for i in range(3):
-    print(start_state[i][0], " ",  start_state[i][1],  " ", start_state[i][2])
-
-
 goal_state = [
                [g[0], g[1], g[2]],
                [g[3], g[4], g[5]],
                [g[6], g[7], g[8]],
               ]
+
 # For loop converts the string array into integers
 for x in range(len(goal_state)):
     for y in range(len(goal_state)):
         if goal_state[x][y] != "X":
             goal_state[x][y] = int(goal_state[x][y])
 
-n = Node(start_state, None, 0)
+a = Node(start_state, None, 0)
+b = Node(goal_state, None, 0)
 s = Search("BFS", start_state, goal_state)
-# s.check_parity()
-options = s.expand(n)
+check = s.check_duplicate(a, b)
+print("DUPLICATE T/F: " + str(check))
 
+"""
 # read in user's preferred search choice - continue prompting until valid choice entered
 search_choice = input("Enter preferred search method: (BFS, Misplaced Tiles, Manhattan Distance, or Gaschnig): ")
 
@@ -51,3 +49,4 @@ valid_searches = ["BFS", "Misplaced Tiles", "Manahattan Distance", "Gaschnig"]
 while search_choice not in valid_searches:
     search_choice = input("The search method you ented is invalid. Please enter valid search method"
                           "(BFS, Misplaced Tiles, Manhattan Distance, or Gaschnig): ")
+"""
