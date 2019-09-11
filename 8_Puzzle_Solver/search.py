@@ -123,8 +123,14 @@ class Search:
         print("Duplicates are boring. Be original.")
 
     """ This method compares the current node to search_goal. """
-    def check_solution(self):
+    def check_solution(self, current):
         print("Testing 1,2,3.")
+        for x in range(len(self.search_goal)):
+            for y in range(len(self.search_goal)):
+                if current[x][y] != self.search_goal[x][y]:
+                    return False
+        return True
+
 
     """ This method runs the BFS puzzle solver. """
     def breadth_first_search(self):
