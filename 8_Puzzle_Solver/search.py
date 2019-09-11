@@ -5,6 +5,7 @@
 from node import Node
 import copy
 
+
 class Search:
     def __init__(self, search=None, start=None, goal=None, closed_list=None, open_list=None):
         self.search_type = search  # This string denotes which search method will be used to solve the puzzle
