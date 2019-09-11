@@ -47,36 +47,64 @@ class Search:
         else:
             print("Parity is not equal.")
 
-    # This method creates a node for each viable move & adds the node to the open_list
+    def print_state(self, n):
+
+        arr = n.val
+        for i in range(3):
+            print(arr[i][0] + " " + arr[i][1] + " " + arr[i][2])
+
+    def find_blank(self, n):
+
+        index = [0, 0]
+        arr = n.val
+        for i in range(3):
+            for j in range(3):
+                if arr[i][j] is 'X':
+                    index = [i, j]
+
+        return index
+
     def expand(self, curr_node):
 
-        blank_pos = curr_node.val.index('X')
+        index = self.find_blank(curr_node)
+        x = index[0]
+        print("X: " + str(x))
+        y = index[1]
+        print("Y: " + str(y))
         options = []
 
         # UP
-        if blank_pos > 2:
+        if x > 0:
             new_list = curr_node.val.copy()
-            new_list[blank_pos], new_list[blank_pos - 3] = new_list[blank_pos - 3], new_list[blank_pos]
-            n = Node(new_list, curr_node, curr_node.g + 1, None, None)
-            options.append(n)
+            new_list[x][y], new_list[x - 1][y] = new_list[x - 1][y], new_list[x][y]
+            up = Node(new_list, curr_node, curr_node.g + 1)
+            print("UP")
+            self.print_state(up)
+            options.append(up)
         # DOWN
-        if blank_pos < 6:
+        if x < 2:
             new_list = curr_node.val.copy()
-            new_list[blank_pos], new_list[blank_pos + 3] = new_list[blank_pos + 3], new_list[blank_pos]
-            n = Node(new_list, curr_node, curr_node.g + 1, None, None)
-            options.append(n)
+            new_list[x][y], new_list[x + 1][y] = new_list[x + 1][y], new_list[x][y]
+            down = Node(new_list, curr_node, curr_node.g + 1)
+            print("DOWN")
+            self.print_state(down)
+            options.append(down)
         # LEFT
-        if blank_pos is not 0 and blank_pos is not 3 and blank_pos is not 6:
+        if y > 0:
             new_list = curr_node.val.copy()
-            new_list[blank_pos], new_list[blank_pos - 1] = new_list[blank_pos - 1], new_list[blank_pos]
-            n = Node(new_list, curr_node, curr_node.g + 1, None, None)
-            options.append(n)
+            left = Node(new_list, curr_node, curr_node.g + 1)
+            new_list[x][y], new_list[x][y - 1] = new_list[x][y - 1], new_list[x][y]
+            print("LEFT")
+            self.print_state(left)
+            options.append(left)
         # RIGHT
-        if blank_pos is not 2 and blank_pos is not 5 and blank_pos is not 8:
+        if y < 2:
             new_list = curr_node.val.copy()
-            new_list[blank_pos], new_list[blank_pos + 1] = new_list[blank_pos + 1], new_list[blank_pos]
-            n = Node(new_list, curr_node, curr_node.g + 1, None, None)
-            options.append(n)
+            new_list[x][y], new_list[x][y + 1] = new_list[x][y + 1], new_list[x][y]
+            right = Node(new_list, curr_node, curr_node.g + 1)
+            print("RIGHT")
+            self.print_state(right)
+            options.append(right)
 
         return options
 
