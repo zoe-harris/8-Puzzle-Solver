@@ -130,6 +130,9 @@ class Search:
                     return False
         return True
 
+    """ This method prints the path of the solution. """
+    def print_path(self):
+        print("We need to see your work!")
 
     """ This method runs the BFS puzzle solver. """
     def breadth_first_search(self):
