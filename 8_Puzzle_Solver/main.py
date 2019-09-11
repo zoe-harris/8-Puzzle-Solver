@@ -40,8 +40,8 @@ for x in range(len(goal_state)):
 
 n = Node(start_state, None, 0)
 s = Search("BFS", start_state, goal_state)
-s.check_parity()
-#  options = s.expand(n)
+# s.check_parity()
+options = s.expand(n)
 
 # read in user's preferred search choice - continue prompting until valid choice entered
 search_choice = input("Enter preferred search method: (BFS, Misplaced Tiles, Manhattan Distance, or Gaschnig): ")

@@ -3,7 +3,7 @@
 # Programming Assignment #1
 
 from node import Node
-
+import copy
 
 class Search:
     def __init__(self, search=None, start=None, goal=None, closed_list=None, open_list=None):
@@ -57,8 +57,11 @@ class Search:
     def print_state(self, n):
 
         arr = n.val
-        for i in range(3):
-            print(arr[i][0] + " " + arr[i][1] + " " + arr[i][2])
+        print("PRINTING:", n.val)
+        """for i in range(len(arr)):
+            for j in range(len(arr[i])):
+                print("", arr[i][j], " ")
+                #print(arr[i][0], " ", arr[i][1], " ", arr[i][2])"""
 
     """ This method finds the blank ('X') in the puzzle. """
     def find_blank(self, n):
@@ -84,36 +87,32 @@ class Search:
 
         # UP
         if x > 0:
-            new_list = curr_node.val.copy()
-            new_list[x][y], new_list[x - 1][y] = new_list[x - 1][y], new_list[x][y]
-            up = Node(new_list, curr_node, curr_node.g + 1)
-            print("UP")
-            self.print_state(up)
-            options.append(up)
+            new_list = copy.deepcopy(curr_node.val)
+            new_list[x - 1][y], new_list[x][y] = new_list[x][y], new_list[x - 1][y]
+            n = Node(new_list, curr_node, curr_node.g + 1)
+            self.print_state(n)
+            options.append(n)
         # DOWN
         if x < 2:
-            new_list = curr_node.val.copy()
-            new_list[x][y], new_list[x + 1][y] = new_list[x + 1][y], new_list[x][y]
-            down = Node(new_list, curr_node, curr_node.g + 1)
-            print("DOWN")
-            self.print_state(down)
-            options.append(down)
+            new_list = copy.deepcopy(curr_node.val)
+            new_list[x + 1][y], new_list[x][y] = new_list[x][y], new_list[x + 1][y]
+            n = Node(new_list, curr_node, curr_node.g + 1)
+            self.print_state(n)
+            options.append(n)
         # LEFT
         if y > 0:
-            new_list = curr_node.val.copy()
-            left = Node(new_list, curr_node, curr_node.g + 1)
-            new_list[x][y], new_list[x][y - 1] = new_list[x][y - 1], new_list[x][y]
-            print("LEFT")
-            self.print_state(left)
-            options.append(left)
+            new_list = copy.deepcopy(curr_node.val)
+            new_list[x][y - 1], new_list[x][y] = new_list[x][y], new_list[x][y - 1]
+            n = Node(new_list, curr_node, curr_node.g + 1)
+            self.print_state(n)
+            options.append(n)
         # RIGHT
         if y < 2:
-            new_list = curr_node.val.copy()
-            new_list[x][y], new_list[x][y + 1] = new_list[x][y + 1], new_list[x][y]
-            right = Node(new_list, curr_node, curr_node.g + 1)
-            print("RIGHT")
-            self.print_state(right)
-            options.append(right)
+            new_list = copy.deepcopy(curr_node.val)
+            new_list[x][y + 1], new_list[x][y] = new_list[x][y], new_list[x][y + 1]
+            n = Node(new_list, curr_node, curr_node.g + 1)
+            self.print_state(n)
+            options.append(n)
 
         return options
 
