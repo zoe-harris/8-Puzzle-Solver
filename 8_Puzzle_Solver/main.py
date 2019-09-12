@@ -4,12 +4,19 @@
 
 from search import Search
 
+# make Search object
+search_obj = Search()
+
 # Read in start and goal states from user
-start_string = input("Enter starting puzzle position (separate tiles with a space and mark blank tile with an X): ")
+start_string = input("Enter start state (separate tiles with a space and mark blank tile with an X): ")
 s = start_string.split()
 
-goal_string = input("Enter goal puzzle position (separate tiles with a space and mark blank tile with an X): ")
+goal_string = input("Enter goal state (separate tiles with a space and mark blank tile with an X): ")
 g = goal_string.split()
+
+# Check parities or start and goal states
+while not search_obj.equal_parity(s, g):
+    print("The state you entered did not have the same parity. This puzzle is unsolvable.")
 
 # Store states as 2D lists
 start_state = [
@@ -46,4 +53,5 @@ while search_choice not in valid_searches:
                           "(BFS, Misplaced Tiles, Manhattan Distance, or Gaschnig): ")
 
 # Call requested search method on given 8-Puzzle
-search_obj = Search()
+# search_obj = Search()
+

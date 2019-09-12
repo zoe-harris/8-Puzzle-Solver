@@ -7,14 +7,37 @@ import copy
 
 
 class Search:
-    def __init__(self, search=None, start=None, goal=None, closed_list=None, open_list=None):
+    def __init__(self, search=None, start=None, goal=None):
         self.search_type = search  # This string denotes which search method will be used to solve the puzzle
         self.search_start = start  # This list the starting state of the puzzle
         self.search_goal = goal  # This list the solution to the puzzle
-        self.closed_list = closed_list  # This is a list that holds the nodes that have been expanded
-        self.open_list = open_list  # This is a list that holds the nodes that need to be expanded
+        self.closed_list = []  # This is a list that holds the nodes that have been expanded
+        self.open_list = []  # This is a list that holds the nodes that need to be expanded
 
     """ This method will determine the parody of the puzzle to determine if it is solvable. """
+    def equal_parity(self, s, g):
+
+        s_test = copy.deepcopy(s)
+        g_test = copy.deepcopy(g)
+
+        s_test.remove('X')
+        g_test.remove('X')
+
+        s_parity = 0
+        g_parity = 0
+
+        for i in range(len(s_test)):
+            for j in range(i, len(s_test)):
+                if s_test[i] > s_test[j]:
+                    s_parity += 1
+                if g_test[i] > g_test[j]:
+                    g_parity += 1
+
+        if (s_parity % 2) == (g_parity % 2):
+            return True  # The parities ARE the same
+        else:
+            return False  # The parities are NOT the same
+
     def check_parity(self):
         p_s = 0  # parity of the start
         p_g = 0  # parity of the goal
