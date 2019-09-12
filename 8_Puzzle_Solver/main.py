@@ -4,54 +4,54 @@
 
 from search import Search
 
-# make Search object
-search_obj = Search()
+def convert_int(con):
+    for x in range(len(con)):
+        if con[x] != "X":
+            con[x] = int(con[x])
+    return con
 
-# Read in start and goal states from user
-start_string = input("Enter start state (separate tiles with a space and mark blank tile with an X): ")
-s = start_string.split()
+def main():
+    # make Search object
+    search_obj = Search()
 
-goal_string = input("Enter goal state (separate tiles with a space and mark blank tile with an X): ")
-g = goal_string.split()
+    # Read in start and goal states from user
+    start_string = input("Enter start state (separate tiles with a space and mark blank tile with an X): ")
+    s = start_string.split()
 
-# Check parities or start and goal states
-while not search_obj.equal_parity(s, g):
-    print("The state you entered did not have the same parity. This puzzle is unsolvable.")
+    goal_string = input("Enter goal state (separate tiles with a space and mark blank tile with an X): ")
+    g = goal_string.split()
 
-# Store states as 2D lists
-start_state = [
-               [s[0], s[1], s[2]],
-               [s[3], s[4], s[5]],
-               [s[6], s[7], s[8]],
-              ]
+    # Check parities or start and goal states
+    if not search_obj.equal_parity(s, g):
+        print("The state you entered did not have the same parity. This puzzle is unsolvable.")
 
-goal_state = [
-               [g[0], g[1], g[2]],
-               [g[3], g[4], g[5]],
-               [g[6], g[7], g[8]],
-             ]
+    convert_int(s)
+    convert_int(g)
 
-#  Convert string elements into integers
-for x in range(len(start_state)):
-    for y in range(len(start_state)):
-        if start_state[x][y] != "X":
-            start_state[x][y] = int(start_state[x][y])
+    # Store states as 2D lists
+    start_state = [
+                   [s[0], s[1], s[2]],
+                   [s[3], s[4], s[5]],
+                   [s[6], s[7], s[8]],
+                  ]
 
-#  Convert the string elements into integers
-for x in range(len(goal_state)):
-    for y in range(len(goal_state)):
-        if goal_state[x][y] != "X":
-            goal_state[x][y] = int(goal_state[x][y])
+    goal_state = [
+                   [g[0], g[1], g[2]],
+                   [g[3], g[4], g[5]],
+                   [g[6], g[7], g[8]],
+                 ]
 
-# Read in user's preferred search choice - continue prompting until valid choice entered
-search_choice = input("Enter preferred search method: (BFS, Misplaced Tiles, Manhattan Distance, or Gaschnig): ")
+    # Read in user's preferred search choice - continue prompting until valid choice entered
+    search_choice = input("Enter preferred search method: (BFS, Misplaced Tiles, Manhattan Distance, or Gaschnig): ")
 
-valid_searches = ["BFS", "Misplaced Tiles", "Manahattan Distance", "Gaschnig"]
+    valid_searches = ["BFS", "Misplaced Tiles", "Manahattan Distance", "Gaschnig"]
 
-while search_choice not in valid_searches:
-    search_choice = input("The search method you ented is invalid. Please enter valid search method"
-                          "(BFS, Misplaced Tiles, Manhattan Distance, or Gaschnig): ")
+    while search_choice not in valid_searches:
+        search_choice = input("The search method you ented is invalid. Please enter valid search method"
+                              "(BFS, Misplaced Tiles, Manhattan Distance, or Gaschnig): ")
 
-# Call requested search method on given 8-Puzzle
-# search_obj = Search()
+    # Call requested search method on given 8-Puzzle
+    # search_obj = Search()
 
+if __name__ == "__main__":
+    main()
