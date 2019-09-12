@@ -14,18 +14,24 @@ class Search:
         self.closed_list = []  # This is a list that holds the nodes that have been expanded
         self.open_list = []  # This is a list that holds the nodes that need to be expanded
 
-    """ This method will determine the parody of the puzzle to determine if it is solvable. """
+    """ This method will determine the parity of the puzzle to determine if it is solvable. """
     def equal_parity(self, s, g):
 
+        # Make copies of s and g so that the lists can be manipulated without impacting
+        # the rest of the code.
         s_test = copy.deepcopy(s)
         g_test = copy.deepcopy(g)
 
+        # Remove blank space marker.
         s_test.remove('X')
         g_test.remove('X')
 
+        # Start parity counts at zero.
         s_parity = 0
         g_parity = 0
 
+        # Compare each element of the list against all the elements indexed after it, incrementing
+        # parity count each time the element is greater than any of the elements indexed after it.
         for i in range(len(s_test)):
             for j in range(i, len(s_test)):
                 if s_test[i] > s_test[j]:
@@ -33,6 +39,7 @@ class Search:
                 if g_test[i] > g_test[j]:
                     g_parity += 1
 
+        # Determine whether parities or both equal or both odd; if they are the same return true.
         if (s_parity % 2) == (g_parity % 2):
             return True  # The parities ARE the same
         else:
@@ -42,11 +49,8 @@ class Search:
     def print_state(self, n):
 
         arr = n.val
-        print("PRINTING:", n.val)
-        """for i in range(len(arr)):
-            for j in range(len(arr[i])):
-                print("", arr[i][j], " ")
-                #print(arr[i][0], " ", arr[i][1], " ", arr[i][2])"""
+        for i in range(len(arr)):
+            print(arr[i][0], " ", arr[i][1], " ", arr[i][2])
 
     """ This method finds the blank ('X') in the puzzle. """
     def find_blank(self, n):
@@ -121,10 +125,12 @@ class Search:
 
     """ This method compares the current node to search_goal. """
     def check_solution(self, current):
+
         for x in range(len(self.search_goal)):
             for y in range(len(self.search_goal)):
                 if current[x][y] != self.search_goal[x][y]:
                     return False
+
         return True
 
     """ This method prints the path of the solution. """
