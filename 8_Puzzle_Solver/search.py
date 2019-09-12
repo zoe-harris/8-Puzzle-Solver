@@ -38,45 +38,6 @@ class Search:
         else:
             return False  # The parities are NOT the same
 
-    def check_parity(self):
-        p_s = 0  # parity of the start
-        p_g = 0  # parity of the goal
-
-        temp = []
-        #  First for-loop determines the parody function of the start of the puzzle.
-        for x in range(len(self.search_start)):
-            for y in range(len(self.search_start)):
-                temp.append(self.search_start[x][y])
-
-        for x in range(0, len(temp)):
-            for y in range(x + 1, len(temp)):
-                if (temp[x] != "X") and (temp[y] != "X"):
-                    if temp[x] > temp[y]:
-                        print("Parity", temp[x], " ", temp[y])
-                        p_s = p_s + 1
-
-        #  Second for-loop determines the parity function of the goal of the puzzle.
-        temp.clear()
-        for x in range(len(self.search_goal)):
-            for y in range(len(self.search_goal)):
-                temp.append(self.search_goal[x][y])
-        print()
-        for x in range(0, len(temp)):
-            for y in range(x + 1, len(temp)):
-                if (temp[x] != "X") and (temp[y] != "X"):
-                    if temp[x] > temp[y]:
-                        print("Parity", temp[x], " ", temp[y])
-                        p_g = p_g + 1
-
-        print("Start Parity: ", p_s, "\nGoal Parity: ", p_g)
-        if (p_s % 2) == (p_g % 2):
-            if p_s % 2 == 0:
-                print("Parity is equal and even.")
-            else:
-                print("Parity is equal and odd.")
-        else:
-            print("Parity is not equal.")
-
     """This prints the current puzzle state."""
     def print_state(self, n):
 
