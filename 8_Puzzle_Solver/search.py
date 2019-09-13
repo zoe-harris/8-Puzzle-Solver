@@ -3,6 +3,7 @@
 # Programming Assignment #1
 
 from node import Node
+from PriorityQueue import PriorityQueue
 import copy
 
 
@@ -12,7 +13,7 @@ class Search:
         self.search_start = start  # This list the starting state of the puzzle
         self.search_goal = goal  # This list the solution to the puzzle
         self.closed_list = []  # This is a list that holds the nodes that have been expanded
-        self.open_list = []  # This is a list that holds the nodes that need to be expanded
+        self.open_list = PriorityQueue()  # This is a list that holds the nodes that need to be expanded
 
     """ This method will determine the parity of the puzzle to determine if it is solvable. """
     def equal_parity(self, s, g):
@@ -140,6 +141,21 @@ class Search:
     """ This method runs the BFS puzzle solver. """
     def breadth_first_search(self):
         print("Congrats, you've made it to BFS! If only it were a BLT.")
+        """Algorithm
+            for each vertex v   // While check_solution(current) != True
+                do: visited = false  // temp_list = expand(curr_node)
+                    pred = -1        
+            Q = empty queue; 
+            flag[s] = true
+            enqueue(Q, s)  // for x in range(len(temp_list), open_list.insert_bfs()
+            while Q is not empty  // Loop again
+                do v = dequeue(Q)
+                    for each w adjacent to v
+                        do if flag[w] = false
+                            then flag[w] = true
+                                pred[w] = v
+                                enqueue(Q, w)
+        """
 
     """ This method runs the misplaced tiles puzzle solver. """
     def misplaced_tiles(self):
