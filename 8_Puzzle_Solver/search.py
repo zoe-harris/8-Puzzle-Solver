@@ -127,9 +127,9 @@ class Search:
     """ This method compares the current node to search_goal. """
     def check_solution(self, current):
 
-        for x in range(len(self.search_goal)):
-            for y in range(len(self.search_goal)):
-                if current[x][y] != self.search_goal[x][y]:
+        for x in range(len(self.search_goal.val)):
+            for y in range(len(self.search_goal.val)):
+                if current.val[x][y] != self.search_goal.val[x][y]:
                     return False
 
         return True
@@ -156,6 +156,15 @@ class Search:
                                 pred[w] = v
                                 enqueue(Q, w)
         """
+        """current = self.search_start
+        self.open_list.enqueue(current)
+        while (self.check_solution(current)):
+            temp_list = self.expand(current)
+            for x in range(len(temp_list)):
+                self.open_list.append(temp_list[x])
+            current = self.open_list.dequeue()"""
+
+
 
     """ This method runs the misplaced tiles puzzle solver. """
     def misplaced_tiles(self):

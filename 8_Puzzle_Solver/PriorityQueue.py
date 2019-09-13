@@ -11,7 +11,7 @@ class PriorityQueue:
         return False
 
     """Function inserts an item to the queue IF f changes."""
-    def insert(self, ele):
+    def enqueue(self, ele):
         # If empty, just add to the front of the queue
         if self.is_empty():
             self.queue.append(ele)
@@ -24,9 +24,9 @@ class PriorityQueue:
             self.queue.append(ele)
 
     """Function inserts an item to the queue if F does not change."""
-    def insert_bfs(self, ele):
+    def enqueue_bfs(self, ele):
         self.queue.append(ele)
 
     """Function deletes the first item of the queue."""
-    def delete(self):
+    def dequeue(self):
         self.queue.pop(0)
