@@ -3,6 +3,7 @@
 # Programming Assignment #1
 
 from search import Search
+from node import Node
 
 def convert_int(con):
     for x in range(len(con)):
@@ -45,6 +46,10 @@ def main():
     search_choice = input("Enter preferred search method: (BFS, Misplaced Tiles, Manhattan Distance, or Gaschnig): ")
 
     valid_searches = ["BFS", "Misplaced Tiles", "Manahattan Distance", "Gaschnig"]
+
+    # make Search object
+    search = Search(search_choice, Node(start_state), Node(goal_state))
+    search.breadth_first_search()
 
     while search_choice not in valid_searches:
         search_choice = input("The search method you ented is invalid. Please enter valid search method"

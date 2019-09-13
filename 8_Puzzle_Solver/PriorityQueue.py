@@ -29,4 +29,4 @@ class PriorityQueue:
 
     """Function deletes the first item of the queue."""
     def dequeue(self):
-        self.queue.pop(0)
+        return self.queue.pop(0)

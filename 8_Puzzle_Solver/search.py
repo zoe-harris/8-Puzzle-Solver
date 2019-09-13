@@ -109,9 +109,9 @@ class Search:
     """ This method checks to see if the current node is located in the closed list. If it is, it is removed from the
     open_list. """
     def check_duplicate(self, n):
-
+        if len(self.closed_list) == 0:
+            return False
         duplicate = True
-
         for x in range(len(self.closed_list)):
             temp = self.closed_list[x]
             duplicate = True
@@ -126,7 +126,6 @@ class Search:
 
     """ This method compares the current node to search_goal. """
     def check_solution(self, current):
-
         for x in range(len(self.search_goal.val)):
             for y in range(len(self.search_goal.val)):
                 if current.val[x][y] != self.search_goal.val[x][y]:
@@ -140,31 +139,25 @@ class Search:
 
     """ This method runs the BFS puzzle solver. """
     def breadth_first_search(self):
-        print("Congrats, you've made it to BFS! If only it were a BLT.")
-        """Algorithm
-            for each vertex v   // While check_solution(current) != True
-                do: visited = false  // temp_list = expand(curr_node)
-                    pred = -1        
-            Q = empty queue; 
-            flag[s] = true
-            enqueue(Q, s)  // for x in range(len(temp_list), open_list.insert_bfs()
-            while Q is not empty  // Loop again
-                do v = dequeue(Q)
-                    for each w adjacent to v
-                        do if flag[w] = false
-                            then flag[w] = true
-                                pred[w] = v
-                                enqueue(Q, w)
-        """
-        """current = self.search_start
-        self.open_list.enqueue(current)
-        while (self.check_solution(current)):
-            temp_list = self.expand(current)
-            for x in range(len(temp_list)):
-                self.open_list.append(temp_list[x])
-            current = self.open_list.dequeue()"""
+        current = self.search_start  # Create our 'current' node and set it equal to the puzzle start
+        self.open_list.enqueue_bfs(current)  # Enqueue the current node
 
+        while self.check_solution(current) is False:  # While loop to continue expanding nodes until solution is reached
+            current = self.open_list.dequeue()  # dequeue front of PQ
+            while self.check_duplicate(current) is True:  # Loop until we find a non-duplicate
+                current = self.open_list.dequeue()
+            temp_list = self.expand(current)  # temp list to hold our expanded options
+            for x in range(len(temp_list)):  # for loop to enqueue all expanded options
+                self.open_list.enqueue_bfs(temp_list[x])
+            self.closed_list.append(current)  # Add the current node to the end of the closed_list
 
+        # Testing.
+        print("Yo you made it to a solution.\nCURRENT")
+        for x in range(len(3)):
+            print(current.val[x][0], current.val[x][1], current.val[x][2])
+        print("GOAL")
+        for x in range(len(3)):
+            print(self.search_goal.val[x][0], self.search_goal.val[x][1], self.search_goal.val[x][2])
 
     """ This method runs the misplaced tiles puzzle solver. """
     def misplaced_tiles(self):
