@@ -70,9 +70,9 @@ class Search:
 
         index = self.find_blank(curr_node)
         x = index[0]
-        print("X: " + str(x))
+        #print("X: " + str(x))
         y = index[1]
-        print("Y: " + str(y))
+        #print("Y: " + str(y))
         options = []
 
         # UP
@@ -80,28 +80,28 @@ class Search:
             new_list = copy.deepcopy(curr_node.val)
             new_list[x - 1][y], new_list[x][y] = new_list[x][y], new_list[x - 1][y]
             n = Node(new_list, curr_node, curr_node.g + 1)
-            self.print_state(n)
+            #self.print_state(n)
             options.append(n)
         # DOWN
         if x < 2:
             new_list = copy.deepcopy(curr_node.val)
             new_list[x + 1][y], new_list[x][y] = new_list[x][y], new_list[x + 1][y]
             n = Node(new_list, curr_node, curr_node.g + 1)
-            self.print_state(n)
+            #self.print_state(n)
             options.append(n)
         # LEFT
         if y > 0:
             new_list = copy.deepcopy(curr_node.val)
             new_list[x][y - 1], new_list[x][y] = new_list[x][y], new_list[x][y - 1]
             n = Node(new_list, curr_node, curr_node.g + 1)
-            self.print_state(n)
+            #self.print_state(n)
             options.append(n)
         # RIGHT
         if y < 2:
             new_list = copy.deepcopy(curr_node.val)
             new_list[x][y + 1], new_list[x][y] = new_list[x][y], new_list[x][y + 1]
             n = Node(new_list, curr_node, curr_node.g + 1)
-            self.print_state(n)
+            #self.print_state(n)
             options.append(n)
 
         return options
@@ -153,10 +153,10 @@ class Search:
 
         # Testing.
         print("Yo you made it to a solution.\nCURRENT")
-        for x in range(len(3)):
+        for x in range(3):
             print(current.val[x][0], current.val[x][1], current.val[x][2])
         print("GOAL")
-        for x in range(len(3)):
+        for x in range(3):
             print(self.search_goal.val[x][0], self.search_goal.val[x][1], self.search_goal.val[x][2])
 
     """ This method runs the misplaced tiles puzzle solver. """
