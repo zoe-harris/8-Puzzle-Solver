@@ -56,20 +56,22 @@ class Search:
             print(n.val[x][0], n.val[x][1], n.val[x][2])
 
     """ This method prints the path of the solution. """
-    def print_path(self):
-        print("path")
+    def print_path(self, n):
 
-    """ This method finds the blank ('X') in the puzzle. """
-    def find_blank(self, n):
+        path = []
 
-        index = [0, 0]
-        arr = n.val
-        for i in range(3):
-            for j in range(3):
-                if arr[i][j] is 'X':
-                    index = [i, j]
+        # Add all predecessors of goal state to path list
+        while n.pred is not None:
+            path.insert(0, n)
+            n = n.pred
 
-        return index
+        path.insert(0, n)
+
+        # Print each state in path list
+        print("Solution Path:")
+        for i in range(len(path)):
+            self.print_state(path[i])
+            print()
 
     """""""""""""""""""""""""""""""""""""""     'CHECK' METHODS     """""""""""""""""""""""""""""""""""""""
 
@@ -120,7 +122,19 @@ class Search:
 
         return True
 
-    """"""""""""""""""""""""""""""""""""""" EXPAND NODE METHOD """""""""""""""""""""""""""""""""""""""
+    """"""""""""""""""""""""""""""""""""""" EXPAND NODE METHODS """""""""""""""""""""""""""""""""""""""
+
+    """ This method finds the blank ('X') in the puzzle. """
+    def find_blank(self, n):
+
+        index = [0, 0]
+        arr = n.val
+        for i in range(3):
+            for j in range(3):
+                if arr[i][j] is 'X':
+                    index = [i, j]
+
+        return index
 
     """ This method expands the current puzzle node. """
     def expand(self, curr_node):
@@ -141,7 +155,7 @@ class Search:
             new_list[x - 1][y], new_list[x][y] = new_list[x][y], new_list[x - 1][y]
             # Create new node, using the new_list puzzle state as its value
             n = Node(new_list, curr_node, curr_node.g + 1)
-            # Add new node to options list to be returned at the end of the method
+            # If new node is not a duplicate, add to options list
             if not self.check_duplicate(n):
                 options.append(n)
         # DOWN
@@ -198,7 +212,7 @@ class Search:
         for x in range(3):
             print(self.search_goal.val[x][0], self.search_goal.val[x][1], self.search_goal.val[x][2])
 
-    """"""""""""""""""""""""""""""""""""""" MISPLACED TILE """""""""""""""""""""""""""""""""""""""
+    """"""""""""""""""""""""""""""""""""""" MISPLACED TILES """""""""""""""""""""""""""""""""""""""
 
     """ Compare node n to goal state and return number of tiles "misplaced" """
     def num_misplaced(self, n):
@@ -216,6 +230,7 @@ class Search:
     """ This method runs the misplaced tiles puzzle solver. """
     def misplaced_tiles(self):
 
+        # Begin with a node holding the user-input start state
         curr_node = self.search_start
         self.open_list.enqueue(curr_node)
 
@@ -236,7 +251,7 @@ class Search:
             # Add current node to closed list
             self.closed_list.append(curr_node)
 
-        self.print_path()
+        self.print_path(curr_node)
         print("Open List Size: ", len(self.open_list.queue))
         print("Closed List Size: ", len(self.closed_list))
 
