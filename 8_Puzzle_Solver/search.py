@@ -15,6 +15,8 @@ class Search:
         self.closed_list = []  # This is a list that holds the nodes that have been expanded
         self.open_list = PriorityQueue()  # This is a list that holds the nodes that need to be expanded
 
+    """""""""""""""""""""""""""""""""""""""    CHECK PARITY    """""""""""""""""""""""""""""""""""""""
+
     """ This method will determine the parity of the puzzle to determine if it is solvable. """
     def equal_parity(self, s, g):
 
@@ -46,12 +48,18 @@ class Search:
         else:
             return False  # The parities are NOT the same
 
+    """""""""""""""""""""""""""""""""""""""     PRINTING METHODS     """""""""""""""""""""""""""""""""""""""
+
     """This prints the current puzzle state."""
     def print_state(self, n):
 
         arr = n.val
         for i in range(len(arr)):
             print(arr[i][0], " ", arr[i][1], " ", arr[i][2])
+
+    """ This method prints the path of the solution. """
+    def print_path(self):
+        print("We need to see your work!")
 
     """ This method finds the blank ('X') in the puzzle. """
     def find_blank(self, n):
@@ -65,46 +73,51 @@ class Search:
 
         return index
 
+    """"""""""""""""""""""""""""""""""""""" EXPAND NODE METHOD """""""""""""""""""""""""""""""""""""""
+
     """ This method expands the current puzzle node. """
     def expand(self, curr_node):
 
+        # Get and store the index of the "blank" tile in curr_node
         index = self.find_blank(curr_node)
         x = index[0]
-        #print("X: " + str(x))
         y = index[1]
-        #print("Y: " + str(y))
+
+        # Create list to store the nodes expanded from curr_node
         options = []
 
         # UP
         if x > 0:
+            # Create deep copy of curr_node's state so that original won't be altered
             new_list = copy.deepcopy(curr_node.val)
+            # Swap "blank" with whatever "tile" is store in the row above it on the puzzle
             new_list[x - 1][y], new_list[x][y] = new_list[x][y], new_list[x - 1][y]
+            # Create new node, using the new_list puzzle state as its value
             n = Node(new_list, curr_node, curr_node.g + 1)
-            #self.print_state(n)
+            # Add new node to options list to be returned at the end of the method
             options.append(n)
         # DOWN
         if x < 2:
             new_list = copy.deepcopy(curr_node.val)
             new_list[x + 1][y], new_list[x][y] = new_list[x][y], new_list[x + 1][y]
             n = Node(new_list, curr_node, curr_node.g + 1)
-            #self.print_state(n)
             options.append(n)
         # LEFT
         if y > 0:
             new_list = copy.deepcopy(curr_node.val)
             new_list[x][y - 1], new_list[x][y] = new_list[x][y], new_list[x][y - 1]
             n = Node(new_list, curr_node, curr_node.g + 1)
-            #self.print_state(n)
             options.append(n)
         # RIGHT
         if y < 2:
             new_list = copy.deepcopy(curr_node.val)
             new_list[x][y + 1], new_list[x][y] = new_list[x][y], new_list[x][y + 1]
             n = Node(new_list, curr_node, curr_node.g + 1)
-            #self.print_state(n)
             options.append(n)
 
         return options
+
+    """""""""""""""""""""""""""""""""""""""     'CHECK' METHODS     """""""""""""""""""""""""""""""""""""""
 
     """ This method checks to see if the current node is located in the closed list. If it is, it is removed from the
     open_list. """
@@ -133,25 +146,29 @@ class Search:
 
         return True
 
-    """ This method prints the path of the solution. """
-    def print_path(self):
-        print("We need to see your work!")
+    """"""""""""""""""""""""""""""""""""""" BREADTH FIRST SEARCH """""""""""""""""""""""""""""""""""""""
 
-    """ This method runs the BFS puzzle solver. """
     def breadth_first_search(self):
+
         current = self.search_start  # Create our 'current' node and set it equal to the puzzle start
         self.open_list.enqueue_bfs(current)  # Enqueue the current node
 
-        while self.check_solution(current) is False:  # While loop to continue expanding nodes until solution is reached
+        # While loop to continue expanding nodes until solution is reached
+        while self.check_solution(current) is False:
+
             current = self.open_list.dequeue()  # dequeue front of PQ
+
             while self.check_duplicate(current) is True:  # Loop until we find a non-duplicate
                 current = self.open_list.dequeue()
+
             temp_list = self.expand(current)  # temp list to hold our expanded options
+
             for x in range(len(temp_list)):  # for loop to enqueue all expanded options
                 self.open_list.enqueue_bfs(temp_list[x])
+
             self.closed_list.append(current)  # Add the current node to the end of the closed_list
 
-        # Testing.
+        # TESTING - REMOVE LATER
         print("Yo you made it to a solution.\nCURRENT")
         for x in range(3):
             print(current.val[x][0], current.val[x][1], current.val[x][2])
@@ -159,14 +176,56 @@ class Search:
         for x in range(3):
             print(self.search_goal.val[x][0], self.search_goal.val[x][1], self.search_goal.val[x][2])
 
+    """"""""""""""""""""""""""""""""""""""" MISPLACED TILE """""""""""""""""""""""""""""""""""""""
+
+    """ Compare node n to goal state and return number of tiles "misplaced" """
+    def num_misplaced(self, n):
+
+        num_misplaced = 0
+
+        for i in range(3):
+            for j in range(3):
+                if n.val[i][j] is not self.search_goal.val[i][j]:
+                    if n.val[i][j] is not 'X':
+                        num_misplaced += 1
+
+        return num_misplaced
+
     """ This method runs the misplaced tiles puzzle solver. """
     def misplaced_tiles(self):
-        print("Misplaced tiles!? How are we supposed to finish the flooring now?!")
+
+        curr_node = Node(self.search_start)
+        self.open_list.enqueue(curr_node)
+
+        while self.check_solution(curr_node):
+
+            # Store the cheapest unexpanded node in curr_node
+            curr_node = self.open_list.dequeue()
+
+            # Expand curr_node and store new nodes inside temp
+            options = self.expand(curr_node)
+
+            # Update f value (g + number of misplaced tiles) in all options
+            # Enqueue updated node into open list
+            for i in range(len(options)):
+                options[i].f = options[i].g + self.num_misplaced(options[i])
+                self.open_list.enqueue(options[i])
+
+            # Add current node to closed list
+            self.closed_list.append(curr_node)
+
+        # self.print_path()
+        # print(len(self.open_list.queue))
+        # print(len(self.closed_list))
+
+    """"""""""""""""""""""""""""""""""""""" MANHATTAN DISTANCE """""""""""""""""""""""""""""""""""""""
 
     """ This method runs the manhattan distance puzzle solver. """
     def manhattan_distance(self):
         print("Welcome to manhattan distance. The distance to Manhattan 4,376.1 miles. Wait, this isn't what"
               " we're supposed to do? Lame.")
+
+    """""""""""""""""""""""""""""""""""""""      GASCHNIG      """""""""""""""""""""""""""""""""""""""
 
     """ This method runs the gaschnig puzzle solver. """
     def gaschnig(self):

@@ -5,11 +5,13 @@
 from search import Search
 from node import Node
 
+
 def convert_int(con):
     for x in range(len(con)):
         if con[x] != "X":
             con[x] = int(con[x])
     return con
+
 
 def main():
     # make Search object
@@ -49,14 +51,19 @@ def main():
 
     # make Search object
     search = Search(search_choice, Node(start_state), Node(goal_state))
-    search.breadth_first_search()
+    # search.breadth_first_search()
+
+    n = Node(start_state)
+    print(search.num_misplaced(n))
 
     while search_choice not in valid_searches:
         search_choice = input("The search method you ented is invalid. Please enter valid search method"
                               "(BFS, Misplaced Tiles, Manhattan Distance, or Gaschnig): ")
 
     # Call requested search method on given 8-Puzzle
-    # search_obj = Search()
+
 
 if __name__ == "__main__":
     main()
+
+

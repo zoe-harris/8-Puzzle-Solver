@@ -11,6 +11,7 @@ class PriorityQueue:
         return False
 
     """Function inserts an item to the queue IF f changes."""
+    # This method inserts elements in order of associated priority (f)
     def enqueue(self, ele):
         # If empty, just add to the front of the queue
         if self.is_empty():
@@ -27,6 +28,8 @@ class PriorityQueue:
     def enqueue_bfs(self, ele):
         self.queue.append(ele)
 
-    """Function deletes the first item of the queue."""
+    """Function removes and returns the first item of the queue"""
+    # This method removes and returns the first element in the queue,
+    # which is also the element with the highest priority
     def dequeue(self):
         return self.queue.pop(0)
