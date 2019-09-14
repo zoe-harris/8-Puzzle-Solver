@@ -51,10 +51,7 @@ def main():
 
     # make Search object
     search = Search(search_choice, Node(start_state), Node(goal_state))
-    # search.breadth_first_search()
-
-    n = Node(start_state)
-    print(search.num_misplaced(n))
+    search.misplaced_tiles()
 
     while search_choice not in valid_searches:
         search_choice = input("The search method you ented is invalid. Please enter valid search method"

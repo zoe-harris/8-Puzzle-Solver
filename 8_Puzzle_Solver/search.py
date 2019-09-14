@@ -52,14 +52,12 @@ class Search:
 
     """This prints the current puzzle state."""
     def print_state(self, n):
-
-        arr = n.val
-        for i in range(len(arr)):
-            print(arr[i][0], " ", arr[i][1], " ", arr[i][2])
+        for x in range(3):
+            print(n.val[x][0], n.val[x][1], n.val[x][2])
 
     """ This method prints the path of the solution. """
     def print_path(self):
-        print("We need to see your work!")
+        print("path")
 
     """ This method finds the blank ('X') in the puzzle. """
     def find_blank(self, n):
@@ -72,6 +70,55 @@ class Search:
                     index = [i, j]
 
         return index
+
+    """""""""""""""""""""""""""""""""""""""     'CHECK' METHODS     """""""""""""""""""""""""""""""""""""""
+
+    """ This method checks to see if the current node is located in the closed list. If it is, it is removed from the
+    open_list. """
+
+    def duplicate(self, n):
+
+        duplicate = True
+
+        for i in range(len(self.closed_list)):
+            duplicate = True
+            for x in range(len(n.val)):
+                for y in range(len(n.val)):
+                    if n.val[x][y] != self.search_goal.val[x][y]:
+                        duplicate = False
+
+        return duplicate
+
+    def check_duplicate(self, n):
+
+        if len(self.closed_list) == 0:
+            return False
+
+        duplicate = True
+
+        for x in range(len(self.closed_list)):
+            temp = self.closed_list[x]
+            duplicate = True
+
+            for i in range(3):
+                for j in range(3):
+                    if n.val[i][j] is not temp.val[i][j]:
+                        duplicate = False
+
+            if duplicate is True:
+                return duplicate
+
+        return duplicate
+
+    """ This method compares the current node to search_goal. """
+
+    def check_solution(self, current):
+        for x in range(len(self.search_goal.val)):
+            for y in range(len(self.search_goal.val)):
+                if current.val[x][y] != self.search_goal.val[x][y]:
+                    return False
+
+        return True
 
     """"""""""""""""""""""""""""""""""""""" EXPAND NODE METHOD """""""""""""""""""""""""""""""""""""""
 
@@ -95,56 +142,31 @@ class Search:
             # Create new node, using the new_list puzzle state as its value
             n = Node(new_list, curr_node, curr_node.g + 1)
             # Add new node to options list to be returned at the end of the method
-            options.append(n)
+            if not self.check_duplicate(n):
+                options.append(n)
         # DOWN
         if x < 2:
             new_list = copy.deepcopy(curr_node.val)
             new_list[x + 1][y], new_list[x][y] = new_list[x][y], new_list[x + 1][y]
             n = Node(new_list, curr_node, curr_node.g + 1)
-            options.append(n)
+            if not self.check_duplicate(n):
+                options.append(n)
         # LEFT
         if y > 0:
             new_list = copy.deepcopy(curr_node.val)
             new_list[x][y - 1], new_list[x][y] = new_list[x][y], new_list[x][y - 1]
             n = Node(new_list, curr_node, curr_node.g + 1)
-            options.append(n)
+            if not self.check_duplicate(n):
+                options.append(n)
         # RIGHT
         if y < 2:
             new_list = copy.deepcopy(curr_node.val)
             new_list[x][y + 1], new_list[x][y] = new_list[x][y], new_list[x][y + 1]
             n = Node(new_list, curr_node, curr_node.g + 1)
-            options.append(n)
+            if not self.check_duplicate(n):
+                options.append(n)
 
         return options
-
-    """""""""""""""""""""""""""""""""""""""     'CHECK' METHODS     """""""""""""""""""""""""""""""""""""""
-
-    """ This method checks to see if the current node is located in the closed list. If it is, it is removed from the
-    open_list. """
-    def check_duplicate(self, n):
-        if len(self.closed_list) == 0:
-            return False
-        duplicate = True
-        for x in range(len(self.closed_list)):
-            temp = self.closed_list[x]
-            duplicate = True
-            for i in range(3):
-                for j in range(3):
-                    if n.val[i][j] is not temp.val[i][j]:
-                        duplicate = False
-            if duplicate is True:
-                return duplicate
-
-        return duplicate
-
-    """ This method compares the current node to search_goal. """
-    def check_solution(self, current):
-        for x in range(len(self.search_goal.val)):
-            for y in range(len(self.search_goal.val)):
-                if current.val[x][y] != self.search_goal.val[x][y]:
-                    return False
-
-        return True
 
     """"""""""""""""""""""""""""""""""""""" BREADTH FIRST SEARCH """""""""""""""""""""""""""""""""""""""
 
@@ -194,10 +216,10 @@ class Search:
     """ This method runs the misplaced tiles puzzle solver. """
     def misplaced_tiles(self):
 
-        curr_node = Node(self.search_start)
+        curr_node = self.search_start
         self.open_list.enqueue(curr_node)
 
-        while self.check_solution(curr_node):
+        while not self.check_solution(curr_node):
 
             # Store the cheapest unexpanded node in curr_node
             curr_node = self.open_list.dequeue()
@@ -214,9 +236,9 @@ class Search:
             # Add current node to closed list
             self.closed_list.append(curr_node)
 
-        # self.print_path()
-        # print(len(self.open_list.queue))
-        # print(len(self.closed_list))
+        self.print_path()
+        print("Open List Size: ", len(self.open_list.queue))
+        print("Closed List Size: ", len(self.closed_list))
 
     """"""""""""""""""""""""""""""""""""""" MANHATTAN DISTANCE """""""""""""""""""""""""""""""""""""""
 
