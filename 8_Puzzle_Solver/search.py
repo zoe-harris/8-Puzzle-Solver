@@ -3,6 +3,7 @@
 # Programming Assignment #1
 
 from node import Node
+from PriorityQueue import PriorityQueue
 import copy
 
 
@@ -12,7 +13,7 @@ class Search:
         self.search_start = start  # This list the starting state of the puzzle
         self.search_goal = goal  # This list the solution to the puzzle
         self.closed_list = []  # This is a list that holds the nodes that have been expanded
-        self.open_list = []  # This is a list that holds the nodes that need to be expanded
+        self.open_list = PriorityQueue()  # This is a list that holds the nodes that need to be expanded
 
     """ This method will determine the parity of the puzzle to determine if it is solvable. """
     def equal_parity(self, s, g):
@@ -69,9 +70,9 @@ class Search:
 
         index = self.find_blank(curr_node)
         x = index[0]
-        print("X: " + str(x))
+        #print("X: " + str(x))
         y = index[1]
-        print("Y: " + str(y))
+        #print("Y: " + str(y))
         options = []
 
         # UP
@@ -79,28 +80,28 @@ class Search:
             new_list = copy.deepcopy(curr_node.val)
             new_list[x - 1][y], new_list[x][y] = new_list[x][y], new_list[x - 1][y]
             n = Node(new_list, curr_node, curr_node.g + 1)
-            self.print_state(n)
+            #self.print_state(n)
             options.append(n)
         # DOWN
         if x < 2:
             new_list = copy.deepcopy(curr_node.val)
             new_list[x + 1][y], new_list[x][y] = new_list[x][y], new_list[x + 1][y]
             n = Node(new_list, curr_node, curr_node.g + 1)
-            self.print_state(n)
+            #self.print_state(n)
             options.append(n)
         # LEFT
         if y > 0:
             new_list = copy.deepcopy(curr_node.val)
             new_list[x][y - 1], new_list[x][y] = new_list[x][y], new_list[x][y - 1]
             n = Node(new_list, curr_node, curr_node.g + 1)
-            self.print_state(n)
+            #self.print_state(n)
             options.append(n)
         # RIGHT
         if y < 2:
             new_list = copy.deepcopy(curr_node.val)
             new_list[x][y + 1], new_list[x][y] = new_list[x][y], new_list[x][y + 1]
             n = Node(new_list, curr_node, curr_node.g + 1)
-            self.print_state(n)
+            #self.print_state(n)
             options.append(n)
 
         return options
@@ -108,9 +109,9 @@ class Search:
     """ This method checks to see if the current node is located in the closed list. If it is, it is removed from the
     open_list. """
     def check_duplicate(self, n):
-
+        if len(self.closed_list) == 0:
+            return False
         duplicate = True
-
         for x in range(len(self.closed_list)):
             temp = self.closed_list[x]
             duplicate = True
@@ -125,10 +126,9 @@ class Search:
 
     """ This method compares the current node to search_goal. """
     def check_solution(self, current):
-
-        for x in range(len(self.search_goal)):
-            for y in range(len(self.search_goal)):
-                if current[x][y] != self.search_goal[x][y]:
+        for x in range(len(self.search_goal.val)):
+            for y in range(len(self.search_goal.val)):
+                if current.val[x][y] != self.search_goal.val[x][y]:
                     return False
 
         return True
@@ -139,7 +139,25 @@ class Search:
 
     """ This method runs the BFS puzzle solver. """
     def breadth_first_search(self):
-        print("Congrats, you've made it to BFS! If only it were a BLT.")
+        current = self.search_start  # Create our 'current' node and set it equal to the puzzle start
+        self.open_list.enqueue_bfs(current)  # Enqueue the current node
+
+        while self.check_solution(current) is False:  # While loop to continue expanding nodes until solution is reached
+            current = self.open_list.dequeue()  # dequeue front of PQ
+            while self.check_duplicate(current) is True:  # Loop until we find a non-duplicate
+                current = self.open_list.dequeue()
+            temp_list = self.expand(current)  # temp list to hold our expanded options
+            for x in range(len(temp_list)):  # for loop to enqueue all expanded options
+                self.open_list.enqueue_bfs(temp_list[x])
+            self.closed_list.append(current)  # Add the current node to the end of the closed_list
+
+        # Testing.
+        print("Yo you made it to a solution.\nCURRENT")
+        for x in range(3):
+            print(current.val[x][0], current.val[x][1], current.val[x][2])
+        print("GOAL")
+        for x in range(3):
+            print(self.search_goal.val[x][0], self.search_goal.val[x][1], self.search_goal.val[x][2])
 
     """ This method runs the misplaced tiles puzzle solver. """
     def misplaced_tiles(self):
