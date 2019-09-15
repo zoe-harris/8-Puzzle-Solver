@@ -68,7 +68,9 @@ class Search:
         path.insert(0, n)
 
         # Print each state in path list
+        print()
         print("Solution Path:")
+
         for i in range(len(path)):
             self.print_state(path[i])
             print()
@@ -257,6 +259,7 @@ class Search:
 
     """"""""""""""""""""""""""""""""""""""" MANHATTAN DISTANCE """""""""""""""""""""""""""""""""""""""
 
+    """ This method returns the index of a given element in a 2D list """
     def get_index(self, n, a):
 
         index = [0, 0]
@@ -268,6 +271,7 @@ class Search:
 
         return index
 
+    """ This method returns the total 'manhattan distance' of a puzzle state """
     def distance(self, curr_node):
 
         # start with a total distance of zero
@@ -285,8 +289,31 @@ class Search:
 
     """ This method runs the manhattan distance puzzle solver. """
     def manhattan_distance(self):
-        print("Welcome to manhattan distance. The distance to Manhattan 4,376.1 miles. Wait, this isn't what"
-              " we're supposed to do? Lame.")
+
+        # Begin with a node holding the user-input start state
+        curr_node = self.search_start
+        self.open_list.enqueue(curr_node)
+
+        while not self.check_solution(curr_node):
+
+            # Store the cheapest unexpanded node in curr_node
+            curr_node = self.open_list.dequeue()
+
+            # Expand curr_node and store new nodes inside temp
+            options = self.expand(curr_node)
+
+            # Update f value (g + number of misplaced tiles) in all options
+            # Enqueue updated node into open list
+            for i in range(len(options)):
+                options[i].f = options[i].g + self.distance(options[i])
+                self.open_list.enqueue(options[i])
+
+            # Add current node to closed list
+            self.closed_list.append(curr_node)
+
+        self.print_path(curr_node)
+        print("Open List Size: ", len(self.open_list.queue))
+        print("Closed List Size: ", len(self.closed_list))
 
     """""""""""""""""""""""""""""""""""""""      GASCHNIG      """""""""""""""""""""""""""""""""""""""
 
