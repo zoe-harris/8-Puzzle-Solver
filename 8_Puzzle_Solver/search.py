@@ -257,6 +257,32 @@ class Search:
 
     """"""""""""""""""""""""""""""""""""""" MANHATTAN DISTANCE """""""""""""""""""""""""""""""""""""""
 
+    def get_index(self, n, a):
+
+        index = [0, 0]
+
+        for i in range(3):
+            for j in range(3):
+                if n.val[i][j] is a:
+                    index = [i, j]
+
+        return index
+
+    def distance(self, curr_node):
+
+        # start with a total distance of zero
+        dist = 0
+
+        # find and sum distances of tiles 1 - 8 from their current to goal states
+        for i in range(9):
+            # get the index of the tile in both curr_node and the goal state
+            tile_a = self.get_index(curr_node, i)
+            tile_b = self.get_index(self.search_goal, i)
+            # add the distance of individual tile to total distance
+            dist += (abs(tile_a[0] - tile_b[0]) + abs(tile_a[1] - tile_b[1]))
+
+        return dist
+
     """ This method runs the manhattan distance puzzle solver. """
     def manhattan_distance(self):
         print("Welcome to manhattan distance. The distance to Manhattan 4,376.1 miles. Wait, this isn't what"
