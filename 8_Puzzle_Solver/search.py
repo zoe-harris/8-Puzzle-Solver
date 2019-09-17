@@ -312,4 +312,45 @@ class Search:
 
     """ This method runs the gaschnig puzzle solver. """
     def gaschnig(self):
-        print("Welcome to gaschnig. I'm not sure what this is but it sounds cool.")
+        """ The relaxed problem assumes that a tile can move from square A to B if B is blank, 
+        but A and B do not need to be adjacent.
+        cost = number of switches to make the sequence correct"""
+        # Begin with a node holding the user-input start state
+        curr_node = self.search_start
+        self.switch_check(curr_node)
+        self.open_list.enqueue(curr_node)
+
+        while not self.check_solution(curr_node):
+
+            # Store the cheapest unexpanded node in curr_node
+            curr_node = self.open_list.dequeue()
+
+            # Expand curr_node and store new nodes inside temp
+            options = self.expand(curr_node)
+
+            # Update f value (g + number of switches) in all options
+            # Enqueue updated node into open list
+            for i in range(len(options)):
+                options[i].f = options[i].g + self.switch_check(options[i])
+                self.open_list.enqueue(options[i])
+
+            # Add current node to closed list
+            self.closed_list.append(curr_node)
+
+        self.print_path(curr_node)
+        print("Open List Size: ", len(self.open_list.queue))
+        print("Closed List Size: ", len(self.closed_list))
+
+    def switch_check(self, curr_node):
+
+        # Start by creating a switch counter
+        switch = 0
+
+        for x in range(3):
+            for y in range(3):
+                if (curr_node.val[x][y] != "X") and (self.search_goal.val[x][y] != "X"):
+                    if curr_node.val[x][y] != self.search_goal.val[x][y]:
+                        switch = switch + 1
+
+        print(switch + 1)
+        return switch + 1  # This is temporary. Most of the logic seems correct, but I'm confused.
