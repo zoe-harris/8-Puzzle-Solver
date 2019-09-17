@@ -188,31 +188,24 @@ class Search:
 
     def breadth_first_search(self):
 
-        current = self.search_start  # Create our 'current' node and set it equal to the puzzle start
-        self.open_list.enqueue_bfs(current)  # Enqueue the current node
+        curr_node = self.search_start  # Create our 'current' node and set it equal to the puzzle start
+        self.open_list.enqueue_bfs(curr_node)  # Enqueue the current node
 
         # While loop to continue expanding nodes until solution is reached
-        while self.check_solution(current) is False:
+        while self.check_solution(curr_node) is False:
 
-            current = self.open_list.dequeue()  # dequeue front of PQ
+            curr_node = self.open_list.dequeue()  # dequeue front of PQ
 
-            while self.check_duplicate(current) is True:  # Loop until we find a non-duplicate
-                current = self.open_list.dequeue()
+            options = self.expand(curr_node)  # temp list to hold our expanded options
 
-            temp_list = self.expand(current)  # temp list to hold our expanded options
+            for x in range(len(options)):  # for loop to enqueue all expanded options
+                self.open_list.enqueue_bfs(options[x])
 
-            for x in range(len(temp_list)):  # for loop to enqueue all expanded options
-                self.open_list.enqueue_bfs(temp_list[x])
+            self.closed_list.append(curr_node)  # Add the current node to the end of the closed_list
 
-            self.closed_list.append(current)  # Add the current node to the end of the closed_list
-
-        # TESTING - REMOVE LATER
-        print("Yo you made it to a solution.\nCURRENT")
-        for x in range(3):
-            print(current.val[x][0], current.val[x][1], current.val[x][2])
-        print("GOAL")
-        for x in range(3):
-            print(self.search_goal.val[x][0], self.search_goal.val[x][1], self.search_goal.val[x][2])
+        self.print_path(curr_node)
+        print("Open List Size: ", len(self.open_list.queue))
+        print("Closed List Size: ", len(self.closed_list))
 
     """"""""""""""""""""""""""""""""""""""" MISPLACED TILES """""""""""""""""""""""""""""""""""""""
 
