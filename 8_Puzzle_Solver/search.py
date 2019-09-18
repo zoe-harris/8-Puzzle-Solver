@@ -202,10 +202,7 @@ class Search:
 
             self.closed_list.append(curr_node)  # Add the current node to the end of the closed_list
 
-            
-
         self.print_path(curr_node)
-
         print("Open List Size: ", len(self.open_list.queue))
         print("Closed List Size: ", len(self.closed_list))
 
