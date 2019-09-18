@@ -317,7 +317,7 @@ class Search:
         cost = number of switches to make the sequence correct"""
         # Begin with a node holding the user-input start state
         curr_node = self.search_start
-        self.switch_check(curr_node)
+
         self.open_list.enqueue(curr_node)
 
         while not self.check_solution(curr_node):
