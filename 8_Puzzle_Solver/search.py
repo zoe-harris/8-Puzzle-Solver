@@ -312,22 +312,14 @@ class Search:
 
     """ This method runs the gaschnig puzzle solver. """
     def gaschnig(self):
-        """ The relaxed problem assumes that a tile can move from square A to B if B is blank, 
-        but A and B do not need to be adjacent.
-        cost = number of switches to make the sequence correct"""
         # Begin with a node holding the user-input start state
         curr_node = self.search_start
-
         self.open_list.enqueue(curr_node)
-
         while not self.check_solution(curr_node):
-
             # Store the cheapest unexpanded node in curr_node
             curr_node = self.open_list.dequeue()
-
             # Expand curr_node and store new nodes inside temp
             options = self.expand(curr_node)
-
             # Update f value (g + number of switches) in all options
             # Enqueue updated node into open list
             for i in range(len(options)):
@@ -341,16 +333,33 @@ class Search:
         print("Open List Size: ", len(self.open_list.queue))
         print("Closed List Size: ", len(self.closed_list))
 
+    """ The following method determines how many switches are necessary to complete the puzzle 
+        if you can swap tiles. """
     def switch_check(self, curr_node):
+        # Start by creating deep copies of our current puzzle & the goal puzzle as well as two empty lists
+        c = copy.deepcopy(curr_node.val)
+        g = copy.deepcopy(self.search_goal.val)
+        current = []
+        goal = []
 
-        # Start by creating a switch counter
+        # The double for loop appends the c & g lists into a 1D array for easier sorting
+        x = 0
+        for y in range(len(c)):
+            for z in range(len(c[y])):
+                current.append(c[y][z])
+                goal.append(g[y][z])
+
+                x = x + 1
+
+        # The for loop cycles through the current array to determine how many switches are needed to have current = goal
         switch = 0
-
-        for x in range(3):
-            for y in range(3):
-                if (curr_node.val[x][y] != "X") and (self.search_goal.val[x][y] != "X"):
-                    if curr_node.val[x][y] != self.search_goal.val[x][y]:
+        for x in range(len(current)):
+            if current[x] != goal[x]:
+                # If the current location in each array are not equal to each other, we search current for the value to
+                # swap our current value with and increment switch by 1
+                for y in range(x, len(current)):
+                    if goal[x] == current[y]:
+                        current[x], current[y] = current[y], current[x]
                         switch = switch + 1
 
-        print(switch + 1)
-        return switch + 1  # This is temporary. Most of the logic seems correct, but I'm confused.
+        return switch  # Return how many switches are needed to store into h
