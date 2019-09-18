@@ -188,31 +188,24 @@ class Search:
 
     def breadth_first_search(self):
 
-        current = self.search_start  # Create our 'current' node and set it equal to the puzzle start
-        self.open_list.enqueue_bfs(current)  # Enqueue the current node
+        curr_node = self.search_start  # Create our 'current' node and set it equal to the puzzle start
+        self.open_list.enqueue_bfs(curr_node)  # Enqueue the current node
 
         # While loop to continue expanding nodes until solution is reached
-        while self.check_solution(current) is False:
+        while self.check_solution(curr_node) is False:
 
-            current = self.open_list.dequeue()  # dequeue front of PQ
+            curr_node = self.open_list.dequeue()  # dequeue front of PQ
 
-            while self.check_duplicate(current) is True:  # Loop until we find a non-duplicate
-                current = self.open_list.dequeue()
+            options = self.expand(curr_node)  # temp list to hold our expanded options
 
-            temp_list = self.expand(current)  # temp list to hold our expanded options
+            for x in range(len(options)):  # for loop to enqueue all expanded options
+                self.open_list.enqueue_bfs(options[x])
 
-            for x in range(len(temp_list)):  # for loop to enqueue all expanded options
-                self.open_list.enqueue_bfs(temp_list[x])
+            self.closed_list.append(curr_node)  # Add the current node to the end of the closed_list
 
-            self.closed_list.append(current)  # Add the current node to the end of the closed_list
-
-        # TESTING - REMOVE LATER
-        print("Yo you made it to a solution.\nCURRENT")
-        for x in range(3):
-            print(current.val[x][0], current.val[x][1], current.val[x][2])
-        print("GOAL")
-        for x in range(3):
-            print(self.search_goal.val[x][0], self.search_goal.val[x][1], self.search_goal.val[x][2])
+        self.print_path(curr_node)
+        print("Open List Size: ", len(self.open_list.queue))
+        print("Closed List Size: ", len(self.closed_list))
 
     """"""""""""""""""""""""""""""""""""""" MISPLACED TILES """""""""""""""""""""""""""""""""""""""
 
@@ -319,4 +312,45 @@ class Search:
 
     """ This method runs the gaschnig puzzle solver. """
     def gaschnig(self):
-        print("Welcome to gaschnig. I'm not sure what this is but it sounds cool.")
+        """ The relaxed problem assumes that a tile can move from square A to B if B is blank, 
+        but A and B do not need to be adjacent.
+        cost = number of switches to make the sequence correct"""
+        # Begin with a node holding the user-input start state
+        curr_node = self.search_start
+
+        self.open_list.enqueue(curr_node)
+
+        while not self.check_solution(curr_node):
+
+            # Store the cheapest unexpanded node in curr_node
+            curr_node = self.open_list.dequeue()
+
+            # Expand curr_node and store new nodes inside temp
+            options = self.expand(curr_node)
+
+            # Update f value (g + number of switches) in all options
+            # Enqueue updated node into open list
+            for i in range(len(options)):
+                options[i].f = options[i].g + self.switch_check(options[i])
+                self.open_list.enqueue(options[i])
+
+            # Add current node to closed list
+            self.closed_list.append(curr_node)
+
+        self.print_path(curr_node)
+        print("Open List Size: ", len(self.open_list.queue))
+        print("Closed List Size: ", len(self.closed_list))
+
+    def switch_check(self, curr_node):
+
+        # Start by creating a switch counter
+        switch = 0
+
+        for x in range(3):
+            for y in range(3):
+                if (curr_node.val[x][y] != "X") and (self.search_goal.val[x][y] != "X"):
+                    if curr_node.val[x][y] != self.search_goal.val[x][y]:
+                        switch = switch + 1
+
+        print(switch + 1)
+        return switch + 1  # This is temporary. Most of the logic seems correct, but I'm confused.
