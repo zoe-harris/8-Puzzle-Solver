@@ -8,8 +8,7 @@ import copy
 
 
 class Search:
-    def __init__(self, search=None, start=None, goal=None):
-        self.search_type = search  # This string denotes which search method will be used to solve the puzzle
+    def __init__(self, start=None, goal=None):
         self.search_start = start  # This list the starting state of the puzzle
         self.search_goal = goal  # This list the solution to the puzzle
         self.closed_list = []  # This is a list that holds the nodes that have been expanded
@@ -153,7 +152,7 @@ class Search:
         if x > 0:
             # Create deep copy of curr_node's state so that original won't be altered
             new_list = copy.deepcopy(curr_node.val)
-            # Swap "blank" with whatever "tile" is store in the row above it on the puzzle
+            # Swap "blank" with whatever "tile" is stored in the row above it on the puzzle
             new_list[x - 1][y], new_list[x][y] = new_list[x][y], new_list[x - 1][y]
             # Create new node, using the new_list puzzle state as its value
             n = Node(new_list, curr_node, curr_node.g + 1)
@@ -206,13 +205,9 @@ class Search:
 
             self.closed_list.append(current)  # Add the current node to the end of the closed_list
 
-        # TESTING - REMOVE LATER
-        print("Yo you made it to a solution.\nCURRENT")
-        for x in range(3):
-            print(current.val[x][0], current.val[x][1], current.val[x][2])
-        print("GOAL")
-        for x in range(3):
-            print(self.search_goal.val[x][0], self.search_goal.val[x][1], self.search_goal.val[x][2])
+        self.print_path(current)
+        print("Open List Size: ", len(self.open_list.queue))
+        print("Closed List Size: ", len(self.closed_list))
 
     """"""""""""""""""""""""""""""""""""""" MISPLACED TILES """""""""""""""""""""""""""""""""""""""
 

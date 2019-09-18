@@ -17,47 +17,70 @@ def main():
     # make Search object
     search_obj = Search()
 
-    # Read in start and goal states from user
-    start_string = input("Enter start state (separate tiles with a space and mark blank tile with an X): ")
-    s = start_string.split()
+    while True:
 
-    goal_string = input("Enter goal state (separate tiles with a space and mark blank tile with an X): ")
-    g = goal_string.split()
+        # Read in start and goal states from user
+        start_string = input("Enter start state (separate tiles with a space and mark blank tile with an X): ")
+        s = start_string.split()
 
-    # Check parities or start and goal states
-    if not search_obj.equal_parity(s, g):
-        print("The state you entered did not have the same parity. This puzzle is unsolvable.")
+        goal_string = input("Enter goal state (separate tiles with a space and mark blank tile with an X): ")
+        g = goal_string.split()
 
-    convert_int(s)
-    convert_int(g)
+        # Check parities or start and goal states
+        if not search_obj.equal_parity(s, g):
+            print("The state you entered did not have the same parity. This puzzle is unsolvable.")
 
-    # Store states as 2D lists
-    start_state = [
-                   [s[0], s[1], s[2]],
-                   [s[3], s[4], s[5]],
-                   [s[6], s[7], s[8]],
-                  ]
+        convert_int(s)
+        convert_int(g)
 
-    goal_state = [
-                   [g[0], g[1], g[2]],
-                   [g[3], g[4], g[5]],
-                   [g[6], g[7], g[8]],
-                 ]
+        # Store states as 2D lists
+        start_state = [
+                       [s[0], s[1], s[2]],
+                       [s[3], s[4], s[5]],
+                       [s[6], s[7], s[8]],
+                      ]
 
-    # Read in user's preferred search choice - continue prompting until valid choice entered
-    search_choice = input("Enter preferred search method: (BFS, Misplaced Tiles, Manhattan Distance, or Gaschnig): ")
+        goal_state = [
+                       [g[0], g[1], g[2]],
+                       [g[3], g[4], g[5]],
+                       [g[6], g[7], g[8]],
+                     ]
 
-    valid_searches = ["BFS", "Misplaced Tiles", "Manahattan Distance", "Gaschnig"]
+        # make Search object
+        # search = Search(Node(start_state), Node(goal_state))
 
-    # make Search object
-    search = Search(search_choice, Node(start_state), Node(goal_state))
-    search.manhattan_distance()
+        while True:
 
-    while search_choice not in valid_searches:
-        search_choice = input("The search method you ented is invalid. Please enter valid search method"
-                              "(BFS, Misplaced Tiles, Manhattan Distance, or Gaschnig): ")
+            # Read in user's preferred search choice - continue prompting until valid choice entered
+            search_choice = input("Enter preferred search method: (BFS, Misplaced Tiles, Manhattan Distance,"
+                                  " or Gaschnig): ")
+            valid_searches = ["BFS", "Misplaced Tiles", "Manhattan Distance", "Gaschnig"]
 
-    # Call requested search method on given 8-Puzzle
+            while search_choice not in valid_searches:
+                search_choice = input("The search method you ented is invalid. Please enter valid search method (BFS, "
+                                      "Misplaced Tiles, Manhattan Distance, or Gaschnig): ")
+
+            # Call requested search method on given 8-Puzzle
+            if search_choice == "BFS":
+                search = Search(Node(start_state), Node(goal_state))
+                search.breadth_first_search()
+            if search_choice == "Misplaced Tiles":
+                search = Search(Node(start_state), Node(goal_state))
+                search.misplaced_tiles()
+            if search_choice == "Manhattan Distance":
+                search = Search(Node(start_state), Node(goal_state))
+                search.manhattan_distance()
+            if search_choice == "Gaschnig":
+                search = Search(Node(start_state), Node(goal_state))
+                search.gaschnig()
+
+            user_input = input("Would you like to solve the same puzzle with a different search method? (Y/N) ")
+            if user_input is "N":
+                break
+
+        user_input = input("Would you like to enter a new puzzle to solve? (Y/N) ")
+        if user_input is "N":
+            break
 
 
 if __name__ == "__main__":
