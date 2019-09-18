@@ -187,25 +187,25 @@ class Search:
 
     def breadth_first_search(self):
 
-        current = self.search_start  # Create our 'current' node and set it equal to the puzzle start
-        self.open_list.enqueue_bfs(current)  # Enqueue the current node
+        curr_node = self.search_start  # Create our 'current' node and set it equal to the puzzle start
+        self.open_list.enqueue_bfs(curr_node)  # Enqueue the current node
 
         # While loop to continue expanding nodes until solution is reached
-        while self.check_solution(current) is False:
+        while self.check_solution(curr_node) is False:
 
-            current = self.open_list.dequeue()  # dequeue front of PQ
+            curr_node = self.open_list.dequeue()  # dequeue front of PQ
 
-            while self.check_duplicate(current) is True:  # Loop until we find a non-duplicate
-                current = self.open_list.dequeue()
+            options = self.expand(curr_node)  # temp list to hold our expanded options
 
-            temp_list = self.expand(current)  # temp list to hold our expanded options
+            for x in range(len(options)):  # for loop to enqueue all expanded options
+                self.open_list.enqueue_bfs(options[x])
 
-            for x in range(len(temp_list)):  # for loop to enqueue all expanded options
-                self.open_list.enqueue_bfs(temp_list[x])
+            self.closed_list.append(curr_node)  # Add the current node to the end of the closed_list
 
-            self.closed_list.append(current)  # Add the current node to the end of the closed_list
+            
 
-        self.print_path(current)
+        self.print_path(curr_node)
+
         print("Open List Size: ", len(self.open_list.queue))
         print("Closed List Size: ", len(self.closed_list))
 
@@ -314,4 +314,54 @@ class Search:
 
     """ This method runs the gaschnig puzzle solver. """
     def gaschnig(self):
-        print("Welcome to gaschnig. I'm not sure what this is but it sounds cool.")
+        # Begin with a node holding the user-input start state
+        curr_node = self.search_start
+        self.open_list.enqueue(curr_node)
+        while not self.check_solution(curr_node):
+            # Store the cheapest unexpanded node in curr_node
+            curr_node = self.open_list.dequeue()
+            # Expand curr_node and store new nodes inside temp
+            options = self.expand(curr_node)
+            # Update f value (g + number of switches) in all options
+            # Enqueue updated node into open list
+            for i in range(len(options)):
+                options[i].f = options[i].g + self.switch_check(options[i])
+                self.open_list.enqueue(options[i])
+
+            # Add current node to closed list
+            self.closed_list.append(curr_node)
+
+        self.print_path(curr_node)
+        print("Open List Size: ", len(self.open_list.queue))
+        print("Closed List Size: ", len(self.closed_list))
+
+    """ The following method determines how many switches are necessary to complete the puzzle 
+        if you can swap tiles. """
+    def switch_check(self, curr_node):
+        # Start by creating deep copies of our current puzzle & the goal puzzle as well as two empty lists
+        c = copy.deepcopy(curr_node.val)
+        g = copy.deepcopy(self.search_goal.val)
+        current = []
+        goal = []
+
+        # The double for loop appends the c & g lists into a 1D array for easier sorting
+        x = 0
+        for y in range(len(c)):
+            for z in range(len(c[y])):
+                current.append(c[y][z])
+                goal.append(g[y][z])
+
+                x = x + 1
+
+        # The for loop cycles through the current array to determine how many switches are needed to have current = goal
+        switch = 0
+        for x in range(len(current)):
+            if current[x] != goal[x]:
+                # If the current location in each array are not equal to each other, we search current for the value to
+                # swap our current value with and increment switch by 1
+                for y in range(x, len(current)):
+                    if goal[x] == current[y]:
+                        current[x], current[y] = current[y], current[x]
+                        switch = switch + 1
+
+        return switch  # Return how many switches are needed to store into h

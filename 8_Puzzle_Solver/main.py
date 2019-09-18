@@ -17,6 +17,7 @@ def main():
     # make Search object
     search_obj = Search()
 
+
     while True:
 
         # Read in start and goal states from user
@@ -81,6 +82,7 @@ def main():
         user_input = input("Would you like to enter a new puzzle to solve? (Y/N) ")
         if user_input is "N":
             break
+
 
 
 if __name__ == "__main__":
